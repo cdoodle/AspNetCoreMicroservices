@@ -14,20 +14,19 @@ namespace Application.Products.Queries.GetProducts
 
     public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, ProductVm>
     {
-        private readonly IAsyncProductRepository _productRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public GetProductsQueryHandler(IAsyncProductRepository productRepository, IMapper mapper)
+        public GetProductsQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
         public async Task<ProductVm> Handle(GetProductsQuery request, CancellationToken cancellationToken)
         {
-            var allProducts = await _productRepository.GetAllAsync();
+            var allProducts = await _unitOfWork.Products.GetAllAsync();
 
             return new ProductVm { Products = _mapper.Map<List<ProductDto>>(allProducts) };
         }
-        
     }
 }

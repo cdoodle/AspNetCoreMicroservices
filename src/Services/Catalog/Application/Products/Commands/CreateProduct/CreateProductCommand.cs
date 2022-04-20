@@ -22,22 +22,23 @@ namespace Application.Products.Commands.CreateProduct
     public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, Guid>
     {
 
-        private readonly IAsyncProductRepository _productRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public CreateProductCommandHandler(IAsyncProductRepository productRepository, IMapper mapper)
+        public CreateProductCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public async Task<Guid> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
             var product = _mapper.Map<Product>(request.Product);
-            await _productRepository.AddProductAsync(product, cancellationToken);
 
+            _unitOfWork.Products.AddProduct(product);
+            await _unitOfWork.CompleteAsAsync(cancellationToken);
+            
             return product.Id;
-
         }
     }
 }

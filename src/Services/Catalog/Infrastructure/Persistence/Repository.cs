@@ -59,10 +59,9 @@ namespace Infrastructure.Persistence
             Context.Set<TEntity>().AddRange(entities);
         }
 
-        public async Task Remove(TEntity entity, CancellationToken cancellationToken)
+        public void Remove(TEntity entity)
         {
             Context.Set<TEntity>().Remove(entity);
-            await Context.SaveChangesAsync(cancellationToken);
         }
 
         public void RemoveRange(IEnumerable<TEntity> entities)

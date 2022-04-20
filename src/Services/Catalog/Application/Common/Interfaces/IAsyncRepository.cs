@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Application.Common.Interfaces
@@ -17,7 +16,7 @@ namespace Application.Common.Interfaces
         Task AddAsync(TEntity entity);
         void AddRange(IEnumerable<TEntity> entities);
 
-        Task Remove(TEntity entity, CancellationToken cancellationToken);
+        void Remove(TEntity entity);
         void RemoveRange(IEnumerable<TEntity> entities);
     }
 }

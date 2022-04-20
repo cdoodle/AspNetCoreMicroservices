@@ -24,19 +24,19 @@ namespace Application.Products.Commands.UpdateProduct
     public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand>
     {
 
-        private readonly IAsyncProductRepository _productRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public UpdateProductCommandHandler(IAsyncProductRepository productRepository, IMapper mapper)
+        public UpdateProductCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
 
         public async  Task<Unit> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _productRepository.SingleOrDefaultAsync(p => p.Id == request.Id);
+            var entity = await _unitOfWork.Products.SingleOrDefaultAsync(p => p.Id == request.Id);
 
             if (entity == null)
             {
@@ -47,10 +47,9 @@ namespace Application.Products.Commands.UpdateProduct
             //Return the same entity instead of creating a new mapped entity
             _mapper.Map(request.Product, entity);
             
-            await _productRepository.UpdateProductAsync(entity, cancellationToken);
+            await _unitOfWork.CompleteAsAsync(cancellationToken);
 
             return Unit.Value;
-
         }
     }
 }

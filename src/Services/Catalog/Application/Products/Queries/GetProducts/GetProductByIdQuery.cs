@@ -21,18 +21,18 @@ namespace Application.Products.Queries.GetProducts
 
     public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, ProductVm>
     {
-        private readonly IAsyncProductRepository _productRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public GetProductByIdQueryHandler(IAsyncProductRepository productRepository, IMapper mapper)
+        public GetProductByIdQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public async Task<ProductVm> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
         {
-            var product = await _productRepository.SingleOrDefaultAsync(p => p.Id == request.Id);
+            var product = await _unitOfWork.Products.SingleOrDefaultAsync(p => p.Id == request.Id);
 
             return new ProductVm { Products = new List<ProductDto> { _mapper.Map<ProductDto>(product) } };
         }

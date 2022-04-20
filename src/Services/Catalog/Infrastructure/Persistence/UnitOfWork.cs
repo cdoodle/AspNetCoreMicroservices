@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces;
-
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence
 {
@@ -14,9 +15,9 @@ namespace Infrastructure.Persistence
         }
         public IAsyncProductRepository Products { get; private set; }
 
-        public int CompleteAsAsync()
+        public async Task<int> CompleteAsAsync(CancellationToken cancellationToken)
         {
-            return _context.SaveChanges();
+            return await _context.SaveChangesAsync(cancellationToken);
         }
 
         public void Dispose()

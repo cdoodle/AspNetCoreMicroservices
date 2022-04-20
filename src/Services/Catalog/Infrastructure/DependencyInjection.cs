@@ -18,6 +18,7 @@ namespace Infrastructure
 
             services.AddScoped(typeof(IAsyncRepository<>), typeof(Repository<>));
             services.AddScoped<IAsyncProductRepository, ProductRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;
         }
