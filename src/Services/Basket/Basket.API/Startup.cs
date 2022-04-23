@@ -23,7 +23,7 @@ namespace Basket.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRedisCacheAccess(Configuration);
-            services.AddApplicationService();
+            services.AddApplicationService(Configuration);
             
             services.AddControllers();
             services.AddSwaggerGen(c =>
