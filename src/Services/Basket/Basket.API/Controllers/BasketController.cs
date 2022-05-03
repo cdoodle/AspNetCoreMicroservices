@@ -49,5 +49,19 @@ namespace Basket.API.Controllers
             await _basketService.CreateAsync(shoppingCartDto);
             return Ok();
         }
+
+        [Route("[action]")]
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult> Checkout([FromBody] BasketCheckout basketCheckout)
+        {
+            var basket = await _basketService.Checkout(basketCheckout);
+            if (basket == null)
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
     }
 }

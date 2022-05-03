@@ -5,6 +5,7 @@ using Discount.Grpc.Protos;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using System.Reflection;
+using MassTransit;
 
 namespace Basket.Application
 {
@@ -19,7 +20,23 @@ namespace Basket.Application
             services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(o => o.Address = new System.Uri(configuration["GrpcSettings:DiscountUrl"]));
 
             services.AddScoped<IBasketService, BasketService>();
-            
+
+            //MassTransit-RabbitMq configuration
+            services.AddMassTransit(config =>
+            {
+                config.UsingRabbitMq((ctx, cfg) =>
+                {
+                    cfg.Host(configuration["EventBusSettings:HostAddress"],
+                             h =>
+                             {
+                                 h.Username("guest");
+                                 h.Password("guest");
+                             });
+                });
+            });
+
+            services.AddMassTransitHostedService();
+
             return services;
         }
     }

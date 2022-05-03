@@ -11,5 +11,7 @@ namespace Basket.Application.Services
 
         Task<ShoppingCartDto> GetOrCreateBasketAsync(string userName);
         Task DeleteAsync(string userName);
+
+        Task<int?> Checkout(BasketCheckout basketCheckout);
     }
 }
