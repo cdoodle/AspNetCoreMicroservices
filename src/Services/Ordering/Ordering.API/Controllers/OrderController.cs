@@ -14,8 +14,8 @@ namespace Ordering.API.Controllers
     [Route("api/v1/[controller]")]
     public class OrderController : ApiControllerBase
     {
-
-        [HttpGet("userName")]
+        [Route("{userName}")]
+        [HttpGet()]
         [ProducesResponseType(typeof(IEnumerable<OrderDto>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<IEnumerable<OrderDto>>> GetOrdersByUserName(string userName)
         {
